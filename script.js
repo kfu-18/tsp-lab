@@ -16,26 +16,53 @@ const cities = [
     { x: 30,  y: 350 },     // 限界
 ]
 
-for (const city of cities) {
-    drawCity(city.x, city.y);
+// for (const city of cities) {
+//     drawCity(city.x, city.y);
+// }
+
+// const routes = allPermutations(cities);
+
+// const result = solveBruteForce(routes)
+
+// drawPath(result.route);
+
+// console.log(totalDistance(cities))
+
+async function main() {
+
+    // const routes = allPermutations(cities);
+    const start = cities[0];
+    const routes =
+        allPermutations(cities.slice(1))
+        .map(route => [start, ...route]);
+
+    const result = await solveBruteForce(routes);
+
+    clearCanvas();
+    ctx.strokeStyle = "red";
+    drawPath(result.route);
+    drawCities();
 }
 
-const routes = allPermutations(cities);
+main();
 
-const result = solveBruteForce(routes)
 
-drawPath(result.route);
-
-console.log(totalDistance(cities))
 
 function drawCity(x, y) {
     ctx.beginPath();
+    ctx.fillStyle = "black"
     ctx.arc(x, y, 5, 0, Math.PI * 2);
     ctx.fill();
 }
 
+function drawCities() {
+    for (const city of cities) {
+        drawCity(city.x, city.y);
+    }
+}
+
 function drawPath(route) {
-ctx.beginPath();
+    ctx.beginPath();
     ctx.moveTo(route[0].x, route[0].y);
 
     for (let i = 1; i < route.length; i++) {
@@ -43,8 +70,9 @@ ctx.beginPath();
     }
 
     ctx.lineTo(route[0].x, route[0].y);
-
     ctx.stroke();
+
+    ctx.beginPath();
 }
 
 function distance(city1, city2) {
@@ -60,7 +88,6 @@ function totalDistance(route) {
     for (let i = 0; i < route.length - 1; i++) {
         total += distance(route[i], route[i+1]);
     }
-
     total += distance(route[route.length - 1], route[0]);
 
     return total;
@@ -86,20 +113,34 @@ function allPermutations(cities) {
     return result;
 }
 
-function solveBruteForce(routes) {
+async function solveBruteForce(routes) {
     let bestDistance = Infinity;
     let bestRoute = null;
 
     for (const route of routes) {
+        clearCanvas();
+        ctx.strokeStyle = "gray";
+        drawPath(route);
+        drawCities();
+
         const d = totalDistance(route)
 
         if (d < bestDistance) {
             bestDistance = d;
             bestRoute = route;
+            await sleep(50);
         }
     }
     return {
         route: bestRoute,
         distance: bestDistance
     };
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function clearCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
