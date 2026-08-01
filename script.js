@@ -1,8 +1,13 @@
 console.log("TSP Lab start");
 
-const cnavas = document.getElementById("canvas");
-const ctx = cnavas.getContext("2d");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
-ctx.beginPath();
-ctx.arc(100, 100, 5, 0, Math.PI * 2)
-ctx.fill();
+
+for (let i = 0; i < 20; i++) {
+    ctx.beginPath();
+    let x = canvas.clientWidth * Math.random()
+    let y = canvas.clientHeight * Math.random()
+    ctx.arc(x, y, 5, 0, Math.PI * 2)
+    ctx.fill();
+}
