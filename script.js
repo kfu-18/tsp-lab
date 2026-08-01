@@ -15,11 +15,11 @@ for (const city of cities) {
     drawCity(city.x, city.y);
 }
 
-let routes = allPermutations(cities);
+const routes = allPermutations(cities);
 
-let bestRoute = solveBruteForce(routes).route
+const result = solveBruteForce(routes)
 
-drawPath(bestRoute);
+drawPath(result.route);
 
 console.log(totalDistance(cities))
 
@@ -29,15 +29,15 @@ function drawCity(x, y) {
     ctx.fill();
 }
 
-function drawPath(cities) {
-    ctx.beginPath();
-    ctx.moveTo(cities[0].x, cities[0].y);
+function drawPath(route) {
+ctx.beginPath();
+    ctx.moveTo(route[0].x, route[0].y);
 
-    for (let i = 1; i < cities.length; i++) {
-        ctx.lineTo(cities[i].x, cities[i].y);
+    for (let i = 1; i < route.length; i++) {
+        ctx.lineTo(route[i].x, route[i].y);
     }
 
-    ctx.lineTo(cities[0].x, cities[0].y);
+    ctx.lineTo(route[0].x, route[0].y);
 
     ctx.stroke();
 }
