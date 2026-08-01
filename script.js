@@ -3,11 +3,21 @@ console.log("TSP Lab start");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+const cities = [
+    { x: 120, y: 80  },
+    { x: 350, y: 500 },
+    { x: 200, y: 220 },
+    { x: 430, y: 90  },
+    { x: 620, y: 420 } 
+]
 
-for (let i = 0; i < 20; i++) {
+for (const city of cities) {
+    drawCity(city.x, city.y);
+}
+
+function drawCity(x, y) {
     ctx.beginPath();
-    let x = canvas.clientWidth * Math.random()
-    let y = canvas.clientHeight * Math.random()
-    ctx.arc(x, y, 5, 0, Math.PI * 2)
+    ctx.arc(x, y, 5, 0, Math.PI * 2);
     ctx.fill();
 }
+
