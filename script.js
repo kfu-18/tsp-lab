@@ -15,7 +15,9 @@ for (const city of cities) {
     drawCity(city.x, city.y);
 }
 
-drawPath(cities)
+drawPath(cities);
+
+console.log(totalDistance(cities))
 
 function drawCity(x, y) {
     ctx.beginPath();
@@ -34,4 +36,23 @@ function drawPath(cities) {
     ctx.lineTo(cities[0].x, cities[0].y);
 
     ctx.stroke();
+}
+
+function distance(city1, city2) {
+    const dx = city1.x - city2.x;
+    const dy = city1.y - city2.y;
+
+    return Math.sqrt(dx*dx + dy*dy);
+}
+
+function totalDistance(route) {
+    let total = 0;
+    
+    for (let i = 0; i < route.length - 1; i++) {
+        total += distance(route[i], route[i+1]);
+    }
+
+    total += distance(route[route.length - 1], route[0]);
+
+    return total;
 }
