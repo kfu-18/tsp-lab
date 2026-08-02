@@ -16,21 +16,9 @@ const cities = [
     { x: 30,  y: 350 },     // 限界
 ]
 
-// for (const city of cities) {
-//     drawCity(city.x, city.y);
-// }
-
-// const routes = allPermutations(cities);
-
-// const result = solveBruteForce(routes)
-
-// drawPath(result.route);
-
-// console.log(totalDistance(cities))
 
 async function main() {
 
-    // const routes = allPermutations(cities);
     const start = cities[0];
     const routes =
         allPermutations(cities.slice(1))
@@ -38,42 +26,10 @@ async function main() {
 
     const result = await solveBruteForce(routes);
 
-    clearCanvas();
-    ctx.strokeStyle = "red";
-    drawPath(result.route);
-    drawCities();
+    drawRoute(result.route, "red")
 }
 
 main();
-
-
-
-function drawCity(x, y) {
-    ctx.beginPath();
-    ctx.fillStyle = "black"
-    ctx.arc(x, y, 5, 0, Math.PI * 2);
-    ctx.fill();
-}
-
-function drawCities() {
-    for (const city of cities) {
-        drawCity(city.x, city.y);
-    }
-}
-
-function drawPath(route) {
-    ctx.beginPath();
-    ctx.moveTo(route[0].x, route[0].y);
-
-    for (let i = 1; i < route.length; i++) {
-        ctx.lineTo(route[i].x, route[i].y);
-    }
-
-    ctx.lineTo(route[0].x, route[0].y);
-    ctx.stroke();
-
-    ctx.beginPath();
-}
 
 function distance(city1, city2) {
     const dx = city1.x - city2.x;
@@ -118,10 +74,8 @@ async function solveBruteForce(routes) {
     let bestRoute = null;
 
     for (const route of routes) {
-        clearCanvas();
-        ctx.strokeStyle = "gray";
-        drawPath(route);
-        drawCities();
+
+        drawRoute(route, "gray");
 
         const d = totalDistance(route)
 
@@ -135,6 +89,44 @@ async function solveBruteForce(routes) {
         route: bestRoute,
         distance: bestDistance
     };
+}
+
+/*
+	描画用の関数
+*/
+
+function drawCity(x, y) {
+    ctx.beginPath();
+    ctx.fillStyle = "black"
+    ctx.arc(x, y, 5, 0, Math.PI * 2);
+    ctx.fill();
+}
+
+function drawCities() {
+    for (const city of cities) {
+        drawCity(city.x, city.y);
+    }
+}
+
+function drawRoute(route, color) {
+    clearCanvas();
+    ctx.strokeStyle = color;
+    drawPath(route);
+    drawCities();
+}
+
+function drawPath(route) {
+    ctx.beginPath();
+    ctx.moveTo(route[0].x, route[0].y);
+
+    for (let i = 1; i < route.length; i++) {
+        ctx.lineTo(route[i].x, route[i].y);
+    }
+
+    ctx.lineTo(route[0].x, route[0].y);
+    ctx.stroke();
+
+    ctx.beginPath();
 }
 
 function sleep(ms) {
