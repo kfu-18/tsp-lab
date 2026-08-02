@@ -4,21 +4,13 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 const distanceElement = document.getElementById("result-distance")
 
-const cities = [
-    { x: 120, y: 80  },
-    { x: 200, y: 500 },
-    { x: 200, y: 220 },
-    { x: 430, y: 90  },
-    { x: 620, y: 420 }, 
-    { x: 320, y: 10  },
-    { x: 400, y: 300 },
-    { x: 750, y: 50  },
-    { x: 480, y: 550 },
-    { x: 30,  y: 350 },     // 限界
-]
+let cities = [];
 
 async function main() {
     distanceElement.textContent = "計算中...";
+
+    cities = await loadCities();
+    console.log(cities)
 
     const start = cities[0];
     const routes =
@@ -93,6 +85,23 @@ async function solveBruteForce(routes) {
         distance: bestDistance
     };
 }
+
+/*
+	共通関数
+*/
+
+async function loadCities() {
+    const response = await fetch("./data/cities.json");
+
+    if(!response.ok) {
+        throw new Error('都市データの取得に失敗しました: ${response.status}');
+    }
+
+    const data = await response.json();
+
+    return data.cities
+}
+
 
 /*
 	描画用の関数
