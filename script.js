@@ -16,7 +16,6 @@ const cities = [
     { x: 30,  y: 350 },     // 限界
 ]
 
-
 async function main() {
 
     const start = cities[0];
@@ -50,17 +49,17 @@ function totalDistance(route) {
 }
 
 function allPermutations(cities) {
-    if (cities.length == 1) {
+    if (cities.length === 1) {
         return [cities];
     }
 
-    let result = [];
+    const result = [];
 
     for (let i = 0; i < cities.length; i++) {
-        let head = cities[i];
-        let rest = cities.filter((_, index) => index !== i);
+        const head = cities[i];
+        const rest = cities.filter((_, index) => index !== i);
 
-        let perms = allPermutations(rest);
+        const perms = allPermutations(rest);
         
         for (let perm of perms) {
             result.push([head, ...perm]);
@@ -75,13 +74,13 @@ async function solveBruteForce(routes) {
 
     for (const route of routes) {
 
-        drawRoute(route, "gray");
-
         const d = totalDistance(route)
-
+        
         if (d < bestDistance) {
             bestDistance = d;
             bestRoute = route;
+
+            drawRoute(route, "gray");
             await sleep(50);
         }
     }
@@ -95,16 +94,16 @@ async function solveBruteForce(routes) {
 	描画用の関数
 */
 
-function drawCity(x, y) {
+function drawCity(city) {
     ctx.beginPath();
     ctx.fillStyle = "black"
-    ctx.arc(x, y, 5, 0, Math.PI * 2);
+    ctx.arc(city.x, city.y, 5, 0, Math.PI * 2);
     ctx.fill();
 }
 
 function drawCities() {
     for (const city of cities) {
-        drawCity(city.x, city.y);
+        drawCity(city);
     }
 }
 
@@ -125,8 +124,6 @@ function drawPath(route) {
 
     ctx.lineTo(route[0].x, route[0].y);
     ctx.stroke();
-
-    ctx.beginPath();
 }
 
 function sleep(ms) {
