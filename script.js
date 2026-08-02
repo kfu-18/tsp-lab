@@ -4,24 +4,19 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 const distanceElement = document.getElementById("result-distance")
 
+const MAX_CITIES = 11;
+
 let cities = [];
+let isCalculating = false;
 
 async function main() {
-    distanceElement.textContent = "計算中...";
-
     cities = await loadCities();
-    console.log(cities)
 
-    const start = cities[0];
-    const routes =
-        allPermutations(cities.slice(1))
-        .map(route => [start, ...route]);
-
-    const result = await solveBruteForce(routes);
-
-    drawRoute(result.route, "red")
-
-    distanceElement.textContent = result.distance.toFixed(2);
+    if (cities.length > MAX_CITIES) {
+        throw new Error(`都市データは最大${MAX_CITIES}件までです`);
+    }
+    
+    await calculateAndDraw();
 }
 
 main();
@@ -29,24 +24,21 @@ main();
 function distance(city1, city2) {
     const dx = city1.x - city2.x;
     const dy = city1.y - city2.y;
-
     return Math.sqrt(dx*dx + dy*dy);
 }
 
 function totalDistance(route) {
     let total = 0;
-    
     for (let i = 0; i < route.length - 1; i++) {
         total += distance(route[i], route[i+1]);
     }
     total += distance(route[route.length - 1], route[0]);
-
     return total;
 }
 
 function allPermutations(cities) {
-    if (cities.length === 1) {
-        return [cities];
+    if (cities.length === 0) {
+        return [[]];
     }
 
     const result = [];
@@ -94,12 +86,35 @@ async function loadCities() {
     const response = await fetch("./data/cities.json");
 
     if(!response.ok) {
-        throw new Error('都市データの取得に失敗しました: ${response.status}');
+        throw new Error(`都市データの取得に失敗しました: ${response.status}`);
     }
 
     const data = await response.json();
 
     return data.cities
+}
+
+async function calculateAndDraw() {
+    if (isCalculating) {
+        return;
+    }
+
+    isCalculating = true;
+    try{
+        distanceElement.textContent = "計算中...";
+
+        const start = cities[0];
+        const routes =
+            allPermutations(cities.slice(1))
+            .map(route => [start, ...route]);
+
+        const result = await solveBruteForce(routes);
+
+        drawRoute(result.route, "red")
+        distanceElement.textContent = result.distance.toFixed(2);
+    } finally {
+        isCalculating = false;
+    }
 }
 
 
