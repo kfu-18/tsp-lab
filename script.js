@@ -2,6 +2,7 @@ console.log("TSP Lab start");
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
+const distanceElement = document.getElementById("result-distance")
 
 const cities = [
     { x: 120, y: 80  },
@@ -17,6 +18,7 @@ const cities = [
 ]
 
 async function main() {
+    distanceElement.textContent = "計算中...";
 
     const start = cities[0];
     const routes =
@@ -26,6 +28,8 @@ async function main() {
     const result = await solveBruteForce(routes);
 
     drawRoute(result.route, "red")
+
+    distanceElement.textContent = result.distance.toFixed(2);
 }
 
 main();
