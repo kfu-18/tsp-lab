@@ -2,7 +2,7 @@ console.log("TSP Lab start");
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-const distanceElement = document.getElementById("result-distance")
+const distanceElement = document.getElementById("result-distance");
 
 const MAX_CITIES = 11;
 
@@ -15,7 +15,7 @@ async function main() {
     if (cities.length > MAX_CITIES) {
         throw new Error(`都市データは最大${MAX_CITIES}件までです`);
     }
-    
+
     await calculateAndDraw();
 }
 
@@ -49,7 +49,7 @@ function allPermutations(cities) {
 
         const perms = allPermutations(rest);
         
-        for (let perm of perms) {
+        for (const perm of perms) {
             result.push([head, ...perm]);
         }
     }
@@ -62,7 +62,7 @@ async function solveBruteForce(routes) {
 
     for (const route of routes) {
 
-        const d = totalDistance(route)
+        const d = totalDistance(route);
         
         if (d < bestDistance) {
             bestDistance = d;
@@ -91,7 +91,7 @@ async function loadCities() {
 
     const data = await response.json();
 
-    return data.cities
+    return data.cities;
 }
 
 async function calculateAndDraw() {
@@ -110,13 +110,36 @@ async function calculateAndDraw() {
 
         const result = await solveBruteForce(routes);
 
-        drawRoute(result.route, "red")
+        drawRoute(result.route, "red");
         distanceElement.textContent = result.distance.toFixed(2);
     } finally {
         isCalculating = false;
     }
 }
 
+canvas.addEventListener("click", async (event) => {
+    if (isCalculating) {
+        return;
+    }
+
+    if (cities.length >= MAX_CITIES) {
+        alert(`都市は最大${MAX_CITIES}個までです`);
+        return;
+    }
+
+    const rect = canvas.getBoundingClientRect();
+
+    const x =
+        (event.clientX - rect.left) *
+        (canvas.width / rect.width);
+
+    const y =
+        (event.clientY - rect.top) *
+        (canvas.height / rect.height);
+
+    cities.push({ x, y });
+    await calculateAndDraw();
+});
 
 /*
 	描画用の関数
