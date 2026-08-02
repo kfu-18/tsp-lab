@@ -166,17 +166,25 @@ function nextFrame() {
 	描画用の関数
 */
 
-function drawCity(city) {
+function drawCity(city, color) {
     ctx.beginPath();
-    ctx.fillStyle = "black"
+    ctx.fillStyle = color
     ctx.arc(city.x, city.y, 5, 0, Math.PI * 2);
     ctx.fill();
 }
 
 function drawCities(cities) {
-    for (const city of cities) {
-        drawCity(city);
-    }
+    cities.forEach((city, index) => {
+        const color = index === 0 ? "blue" : "black";
+        drawCity(city, color);
+        drawCityLabel(city, index, color);
+    }); 
+}
+
+function drawCityLabel(city, index, color) {
+    ctx.font = "24px serif";
+    ctx.fillStyle = color;
+    ctx.strokeText(index, city.x-10, city.y-10);
 }
 
 function drawRoute(route, color) {
