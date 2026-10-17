@@ -1,4 +1,5 @@
 import { totalDistance } from "./utils/distance.js";
+import { sleep, nextFrame } from "./utils/wait.js";
 
 console.log("TSP Lab start");
 
@@ -143,12 +144,6 @@ canvas.addEventListener("click", async (event) => {
     await calculateAndDraw();
 });
 
-function nextFrame() {
-    return new Promise((resolve) => {
-        requestAnimationFrame(resolve);
-    });
-}
-
 /*
 	描画用の関数
 */
@@ -191,10 +186,6 @@ function drawPath(route) {
 
     ctx.lineTo(route[0].x, route[0].y);
     ctx.stroke();
-}
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function clearCanvas() {
