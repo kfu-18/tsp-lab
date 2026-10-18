@@ -1,11 +1,12 @@
 import { totalDistance } from "./utils/distance.js";
 import { sleep, nextFrame } from "./utils/wait.js";
+import { createRenderer } from "./utils/renderer.js";
 import { loadCities } from "./utils/cityLoader.js";
 
 console.log("TSP Lab start");
 
 const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const renderer = createRenderer(canvas);
 const cityCountElement = document.getElementById("city-count");
 const statusElement = document.getElementById("status");
 const distanceElement = document.getElementById("result-distance");
@@ -60,7 +61,7 @@ async function solveBruteForce(routes) {
             bestDistance = d;
             bestRoute = route;
 
-            drawRoute(route, "gray");
+            renderer.drawRoute(route, "gray");
             await sleep(50);
         }
     }
@@ -93,7 +94,7 @@ async function calculateAndDraw() {
 
         const result = await solveBruteForce(routes);
 
-        drawRoute(result.route, "red");
+        renderer.drawRoute(result.route, "red");
         distanceElement.textContent = result.distance.toFixed(2);
         statusElement.textContent = "計算完了"
     } catch (error) {
@@ -132,51 +133,3 @@ canvas.addEventListener("click", async (event) => {
     
     await calculateAndDraw();
 });
-
-/*
-	描画用の関数
-*/
-
-function drawCity(city, color) {
-    ctx.beginPath();
-    ctx.fillStyle = color
-    ctx.arc(city.x, city.y, 5, 0, Math.PI * 2);
-    ctx.fill();
-}
-
-function drawCities(cities) {
-    cities.forEach((city, index) => {
-        const color = index === 0 ? "blue" : "black";
-        drawCity(city, color);
-        drawCityLabel(city, index, color);
-    }); 
-}
-
-function drawCityLabel(city, index, color) {
-    ctx.font = "24px serif";
-    ctx.fillStyle = color;
-    ctx.strokeText(index, city.x-10, city.y-10);
-}
-
-function drawRoute(route, color) {
-    clearCanvas();
-    ctx.strokeStyle = color;
-    drawPath(route);
-    drawCities(route);
-}
-
-function drawPath(route) {
-    ctx.beginPath();
-    ctx.moveTo(route[0].x, route[0].y);
-
-    for (let i = 1; i < route.length; i++) {
-        ctx.lineTo(route[i].x, route[i].y);
-    }
-
-    ctx.lineTo(route[0].x, route[0].y);
-    ctx.stroke();
-}
-
-function clearCanvas() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-}
