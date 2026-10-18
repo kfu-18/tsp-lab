@@ -1,6 +1,7 @@
 import { totalDistance } from "./utils/distance.js";
 import { sleep, nextFrame } from "./utils/wait.js";
 import { createRenderer } from "./utils/renderer.js";
+import { loadCities } from "./utils/cityLoader.js";
 
 console.log("TSP Lab start");
 
@@ -73,18 +74,6 @@ async function solveBruteForce(routes) {
 /*
 	共通関数
 */
-
-async function loadCities() {
-    const response = await fetch("./data/cities.json");
-
-    if(!response.ok) {
-        throw new Error(`都市データの取得に失敗しました: ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    return data.cities;
-}
 
 async function calculateAndDraw() {
     if (isCalculating) {
